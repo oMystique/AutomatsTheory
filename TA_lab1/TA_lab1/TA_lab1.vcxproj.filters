@@ -59,20 +59,25 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="json_spirit\json_spirit_reader.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="json_spirit\json_spirit_value.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="json_spirit\json_spirit_writer.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="json_spirit\json_spirit_reader.cpp">
+      <Filter>Заголовочные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="json_spirit\json_spirit_value.cpp">
+      <Filter>Заголовочные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="json_spirit\json_spirit_writer.cpp">
+      <Filter>Заголовочные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="json_spirit\json_spirit.vcproj" />
+    <None Include="json_spirit\json_spirit.vcproj">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="input.json">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -15,9 +15,10 @@ static const string TRANSITIONS_TYPE = "transitions";
 static const string STATES_TYPE = "states";
 static const pair<string, string> EMPTY_CELL = { "", "" };
 
+typedef vector<vector<pair<string, string>>> StateMachine;
 
 //|||||||||||||||||||||||||Test;|||||||||||||||||||||||||//
-void PrintOutputTable(vector<vector<pair<string, string>>> const &table, unsigned linesCount, unsigned columnsCount)
+void PrintOutputTable(StateMachine const &table, unsigned linesCount, unsigned columnsCount)
 {
 	for (int i = 0; i <= linesCount; ++i)
 	{
@@ -56,11 +57,11 @@ Array GetArray(Object const &stateMachine, string const& key)
 	return{};
 }
 
-vector<vector<pair<string, string>>> GetMealeTable(Object const &object)
+StateMachine GetMealeTable(Object const &object)
 {
 	auto states = GetArray(object, STATES_TYPE);
 
-	vector<vector<pair<string, string>>> table(1);
+	StateMachine table(1);
 	table[0].push_back(EMPTY_CELL);
 
 	for (auto state : states)
@@ -125,9 +126,9 @@ vector<vector<pair<string, string>>> GetMealeTable(Object const &object)
 //} 
 /* ??? */
 
-vector<vector<pair<string, string>>> GetMooreTable(Object const &object)
+StateMachine GetMooreTable(Object const &object)
 {
-	auto table = vector<vector<pair<string, string>>>(1);
+	auto table = StateMachine(1);
 	table[0].push_back(EMPTY_CELL);
 
 	auto states = GetArray(object, STATES_TYPE);
@@ -179,8 +180,36 @@ vector<vector<pair<string, string>>> GetMooreTable(Object const &object)
 	return table;
 }
 
-vector<Pair>* GetAutomats(string const &file_name)
+StateMachine TransferToMeale(StateMachine const& moore)
 {
+	std::map<string, string> mooreStates;
+	for (auto & cell : moore[0])
+	{
+		mooreStates.insert({cell.first, cell.second});
+	}
+	
+	auto meale = moore;
+	for (auto & row : meale)
+	{
+		for (auto & cell : row)
+		{
+			auto it = mooreStates.find(cell.first);
+			if (it != mooreStates.end())
+			{
+				cell.second = it->second;
+			}
+		}
+	}
+	for (auto & cell : meale[0])
+	{
+		cell.second = "";
+	}
+	return meale;
+}
+
+vector<pair<StateMachine, string>> GetStateMachines(string const &file_name)
+{
+	vector<pair<StateMachine, string>> stateMachines;
 	std::ifstream inputFile(file_name);
 
 	Value value;
@@ -193,20 +222,21 @@ vector<Pair>* GetAutomats(string const &file_name)
 	auto secondType = seconSM.at(1).value_.get_str();
 
 	cout << firstType << endl; //Example Meale;
-	GetMealeTable(firstSM);
+	stateMachines.push_back({ GetMealeTable(firstSM), "meale" });
 
 	cout << endl << endl;
 
 	cout << secondType << endl; //Example Moore;
-	GetMooreTable(seconSM);
+	stateMachines.push_back({GetMooreTable(seconSM), "moore"});
 
-	return{};
+	return stateMachines;
 }
  
 
 int main()
 {
-	GetAutomats("input.json");
+	auto stateMachines = GetStateMachines("input.json");
+	auto meale = TransferToMeale(stateMachines[1].first);
 
     return 0;
 }

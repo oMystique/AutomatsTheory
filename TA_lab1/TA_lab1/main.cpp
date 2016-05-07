@@ -20,9 +20,9 @@ typedef vector<vector<pair<string, string>>> StateMachine;
 //|||||||||||||||||||||||||Test;|||||||||||||||||||||||||//
 void PrintOutputTable(StateMachine const &table, unsigned linesCount, unsigned columnsCount)
 {
-	for (int i = 0; i <= linesCount; ++i)
+	for (unsigned i = 0; i <= linesCount; ++i)
 	{
-		for (int j = 0; j != columnsCount; ++j)
+		for (unsigned j = 0; j != columnsCount; ++j)
 		{
 			if (table[i][j].first.empty())
 			{
@@ -207,6 +207,82 @@ StateMachine TransferToMeale(StateMachine const& moore)
 	return meale;
 }
 
+map<string, pair<string, string>> GetNewStates(StateMachine const &meale)
+{
+	std::map<string, pair<string, string>> mooreStates;
+	int count = 0;
+	for (auto & row : meale)
+	{
+		for (auto & cell : row)
+		{
+			if (!cell.second.empty() 
+				&& (find_if(mooreStates.begin(), mooreStates.end(),
+				[&cell](auto const &state) 
+				{return state.second == cell; })
+				== mooreStates.end()))
+			{
+				mooreStates.emplace("q" + to_string(count), cell);
+				++count;
+			}
+		}
+	}
+	return mooreStates;
+}
+
+StateMachine TransferToMoore(StateMachine const &meale)
+{
+	auto mooreStates = GetNewStates(meale);
+	StateMachine transferedTable(1);
+	transferedTable[0].push_back(EMPTY_CELL);
+
+	for (auto &state : mooreStates)
+	{
+		transferedTable[0].push_back(pair<string, string>(state.first, state.second.second));
+	}
+
+	for (size_t i = 1; i < meale.size(); ++i)
+	{
+		auto vec = vector<pair<string, string>>(transferedTable[0].size());
+		transferedTable.push_back(vec);
+	}
+
+	int k = 1;
+	for (auto &input : meale)
+	{
+		if (input[0] != EMPTY_CELL)
+		{
+			transferedTable[k][0] = input[0];
+			++k;
+		}
+	}
+
+	for (size_t i = 1; i < transferedTable[0].size(); ++i)
+	{
+		auto mooreState = mooreStates.at(transferedTable[0][i].first).first;
+		for (size_t j = 0; j < meale[0].size() - 1; ++j)
+		{
+			if (meale[0][j].first == mooreState)
+			{
+				for (size_t k = 1; k < meale.size(); ++k)
+				{
+					auto state2 = meale[j][k];
+					auto it = (find_if(mooreStates.begin(), mooreStates.end(),
+						[&state2](auto const &state) {return state.second == state2; }));
+					if (it != mooreStates.end())
+					{
+						transferedTable[j][k].first = it->first;
+					}
+				}
+			}
+		}
+	}
+
+	cout << endl <<"Melee -> Moore" << endl;
+	PrintOutputTable(transferedTable, transferedTable.size() - 1, transferedTable[0].size());
+
+	return transferedTable;
+}
+
 vector<pair<StateMachine, string>> GetStateMachines(string const &file_name)
 {
 	vector<pair<StateMachine, string>> stateMachines;
@@ -237,7 +313,9 @@ int main()
 {
 	auto stateMachines = GetStateMachines("input.json");
 	auto meale = TransferToMeale(stateMachines[1].first);
-
+	cout << endl << "Moore -> Melee"  << endl;
+	PrintOutputTable(meale, 2, 4);
+	TransferToMoore(stateMachines[0].first);
     return 0;
 }
 

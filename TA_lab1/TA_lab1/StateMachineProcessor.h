@@ -1,0 +1,26 @@
+#pragma once
+#include "StateMachine.h"
+
+typedef std::map<std::string, std::pair<std::string, std::string>> States;
+
+class CStateMachineProcessor
+{
+public:
+	CStateMachineProcessor(std::string const& input);
+	void WriteToFile(std::string const& output);
+	void TransferToMeale(CStateMachine & sm);
+	void TransferToMoore(CStateMachine & sm);
+	CStateMachine & Get(std::string const& id);
+	~CStateMachineProcessor();
+private:
+
+	json_spirit::Object ToJson(CStateMachine const& sm);
+	json_spirit::Array GetStates(CStateMachine const& sm);
+	json_spirit::Array GetTransitions(CStateMachine const& sm);
+	States GetNewStates(StateTable const &meale);
+	std::vector<CStateMachine> m_stateMachines;
+	json_spirit::Array m_jsonStateMachines;
+	bool m_isFirstTimeWrite;
+
+};
+

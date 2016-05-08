@@ -1,6 +1,6 @@
 {
     "state machine": [{
-        "id": "state machine x",
+        "id": "StateMachineX",
         "type": "meale",
         "states": [{
             "id": "q1"
@@ -26,7 +26,7 @@
             "to": "q3"
         }]
     }, {
-        "id": "state machine y",
+        "id": "StateMachineY",
         "type": "moore",
         "states": [{
             "id": "q1",

@@ -1,0 +1,74 @@
+{
+    "state machine" : [
+        {
+            "id" : "StateMachineX",
+            "type" : "moore",
+            "states" : [
+                {
+                    "id" : "q0",
+                    "output" : "y1"
+                },
+                {
+                    "id" : "q1",
+                    "output" : "y2"
+                },
+                {
+                    "id" : "q2",
+                    "output" : "y1"
+                }
+            ],
+            "transitions" : [
+                {
+                    "input" : "x1",
+                    "from" : "q0",
+                    "to" : "q0"
+                },
+                {
+                    "input" : "x1",
+                    "from" : "q1",
+                    "to" : "q1"
+                },
+                {
+                    "input" : "x2",
+                    "from" : "q0",
+                    "to" : "q2"
+                }
+            ]
+        },
+        {
+            "id" : "StateMachineY",
+            "type" : "meale",
+            "states" : [
+                {
+                    "id" : "q1"
+                },
+                {
+                    "id" : "q2"
+                },
+                {
+                    "id" : "q3"
+                }
+            ],
+            "transitions" : [
+                {
+                    "input" : "x1",
+                    "output" : "y1",
+                    "from" : "q1",
+                    "to" : "q1"
+                },
+                {
+                    "input" : "x1",
+                    "output" : "y2",
+                    "from" : "q2",
+                    "to" : "q3"
+                },
+                {
+                    "input" : "x2",
+                    "output" : "y3",
+                    "from" : "q1",
+                    "to" : "q2"
+                }
+            ]
+        }
+    ]
+}

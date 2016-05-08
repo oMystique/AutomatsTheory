@@ -1,0 +1,3 @@
+translate-mil-to-mur StateMachineX
+translate-mur-to-mil StateMachineY
+write-to-output-file

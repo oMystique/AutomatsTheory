@@ -1,12 +1,21 @@
 #pragma once
+#include "StateMachineProcessor.h"
+
+typedef std::function<void(std::istream & args)> Action;
+
 class CCommandHandler
 {
 public:
 	CCommandHandler() = delete;
-	CCommandHandler(std::istream & strm);
-	void Exec();
-	~CCommandHandler();
+	CCommandHandler(CStateMachineProcessor & sm, std::istream & input);
+	void HandleCommand();
+	~CCommandHandler() = default;
 private:
-	std::istream & m_strm;
+	void TransferToMeale(std::istream & strm);
+	void TransferToMoore(std::istream & strm);
+	void WriteOutputToFile(std::istream & strm);
+	std::istream & m_input;
+	std::map<std::string, Action> m_actions;
+	CStateMachineProcessor & m_smProcessor;
 };
 

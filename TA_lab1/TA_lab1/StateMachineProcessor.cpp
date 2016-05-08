@@ -4,8 +4,9 @@
 using namespace json_spirit;
 using namespace std;
 
-CStateMachineProcessor::CStateMachineProcessor(std::string const& input)
+CStateMachineProcessor::CStateMachineProcessor(std::string const& input, std::string const& output)
 	: m_isFirstTimeWrite(true)
+	, m_output(output)
 {
 	ifstream inputFile(input);
 	Value value;
@@ -17,9 +18,9 @@ CStateMachineProcessor::CStateMachineProcessor(std::string const& input)
 	}
 }
 
-void CStateMachineProcessor::WriteToFile(std::string const& output)
+void CStateMachineProcessor::WriteToFile()
 {
-	ofstream out(output);
+	ofstream out(m_output);
 	Object mainObj;
 	mainObj.push_back(Pair("state machine", m_jsonStateMachines));
 	write(mainObj, out, json_spirit::pretty_print);

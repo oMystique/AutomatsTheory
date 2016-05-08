@@ -1,2 +1,0 @@
-translate-mil-to-mur state machine x
-translate-mur-to-mil state machine x 

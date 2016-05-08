@@ -1,13 +1,25 @@
 #include "stdafx.h"
-#include "StateMachineProcessor.h"
+#include "CommandHandler.h"
 
 
-int main()
+int main(int argc, char* argv[])
 {
-	auto stateMachinesProc = CStateMachineProcessor("input.json");
-	stateMachinesProc.TransferToMoore(stateMachinesProc.Get("state machine x"));
-	stateMachinesProc.TransferToMeale(stateMachinesProc.Get("state machine y"));
-	stateMachinesProc.WriteToFile("output.json");
+	if (argc != 4)
+	{
+		std::cout << "Usage: commands.json input.json output.txt" << std::endl;
+		return -1;
+	}
+
+	std::string f(argv[1]);
+	std::ifstream in(argv[1]);
+	CStateMachineProcessor smProcesor(argv[2], argv[3]);
+	CCommandHandler handler(smProcesor, in);
+
+	while (!in.eof() && !in.fail())
+	{
+		handler.HandleCommand();
+	}
+
     return 0;
 }
 

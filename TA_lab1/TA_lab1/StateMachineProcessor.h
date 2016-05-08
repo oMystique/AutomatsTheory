@@ -6,8 +6,9 @@ typedef std::map<std::string, std::pair<std::string, std::string>> States;
 class CStateMachineProcessor
 {
 public:
-	CStateMachineProcessor(std::string const& input);
-	void WriteToFile(std::string const& output);
+	CStateMachineProcessor() = delete;
+	CStateMachineProcessor(std::string const& input, std::string const& output);
+	void WriteToFile();
 	void TransferToMeale(CStateMachine & sm);
 	void TransferToMoore(CStateMachine & sm);
 	CStateMachine & Get(std::string const& id);
@@ -21,6 +22,7 @@ private:
 	std::vector<CStateMachine> m_stateMachines;
 	json_spirit::Array m_jsonStateMachines;
 	bool m_isFirstTimeWrite;
+	std::string m_output;
 
 };
 

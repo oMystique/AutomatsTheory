@@ -11,10 +11,11 @@ public:
 	void WriteToFile();
 	void TransferToMeale(CStateMachine & sm);
 	void TransferToMoore(CStateMachine & sm);
+	void Minimize(CStateMachine & sm);
 	CStateMachine & Get(std::string const& id);
 	~CStateMachineProcessor();
 private:
-
+	StateTable AllocateOfEquivalenceClass(StateTable resourceST, StateTable const &originalST);
 	json_spirit::Object ToJson(CStateMachine const& sm);
 	json_spirit::Array GetStates(CStateMachine const& sm);
 	json_spirit::Array GetTransitions(CStateMachine const& sm);

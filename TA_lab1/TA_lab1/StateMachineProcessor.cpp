@@ -4,6 +4,33 @@
 using namespace json_spirit;
 using namespace std;
 
+bool operator ==(vector<pair<string, string>> const &v1, vector<pair<string, string>> const &v2)
+{
+	if (v1.size() != v2.size())
+	{
+		return false;
+	}
+
+	for (size_t i = 0; i != v1.size(); ++i)
+	{
+		if (v1[i].first != v2[i].first)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+vector<pair<string, string>> GetColumn(StateTable const &sm, size_t columnNumber)
+{
+	vector<pair<string, string>> v;
+	for (auto it = sm.begin() + 1; it != sm.end(); ++it)
+	{
+		v.push_back((*it)[columnNumber]);
+	}
+	return v;
+}
+
 CStateMachineProcessor::CStateMachineProcessor(std::string const& input, std::string const& output)
 	: m_isFirstTimeWrite(true)
 	, m_output(output)
@@ -194,6 +221,77 @@ void CStateMachineProcessor::TransferToMoore(CStateMachine & sm)
 	sm.GetTable() = transferedTable;
 	sm.SetType("moore");
 	m_jsonStateMachines.push_back(ToJson(sm));
+}
+
+StateTable CStateMachineProcessor::AllocateOfEquivalenceClass(StateTable resourceST, StateTable const & originalST)
+{
+	int classNumber = 1;
+	map<string, int> classes;
+	while (resourceST[0].size() != 1)
+	{
+		auto currentColumn = GetColumn(resourceST, 1);
+		classes.emplace(resourceST[0][1].first, classNumber);
+		for (auto i = 0; i != resourceST.size(); ++i)
+		{
+			auto &vec = resourceST[i];
+			vec.erase(vec.begin() + 1);
+		}
+		for (size_t i = 1; i < resourceST[0].size(); ++i)
+		{
+			auto cmpColumn = GetColumn(resourceST, i);
+			if (cmpColumn == currentColumn)
+			{
+				classes.emplace(resourceST[0][i].first, classNumber);
+			}
+		}
+		++classNumber;
+	}
+
+	auto outputST = originalST;
+	for (auto i = 1; i != outputST.size(); ++i)
+	{
+		for (auto j = 1; j != outputST[0].size(); ++j)
+		{
+			auto state = classes.find(originalST[i][j].first);
+			if (state != classes.end())
+			{
+				outputST[i][j].first = to_string(state->second);
+			}
+		}
+	}
+
+	return outputST;
+}
+
+void CStateMachineProcessor::Minimize(CStateMachine & sm)
+{
+	if (sm.GetType() != "melee")
+	{
+		TransferToMeale(sm);
+	}
+
+	//for swap Y and Q, for example
+	auto tempCopyST = sm.GetTable();
+
+	for (unsigned i = 1; i <= tempCopyST.size() - 1; ++i)
+	{
+		for (unsigned j = 1; j != tempCopyST[0].size(); ++j)
+		{
+			swap(tempCopyST[i][j].first, tempCopyST[i][j].second);
+		}
+	}
+	//
+
+	StateTable oldSTCpy = AllocateOfEquivalenceClass(tempCopyST, sm.GetTable());
+	StateTable currentSTCpy;
+	do
+	{
+		currentSTCpy = AllocateOfEquivalenceClass(oldSTCpy, sm.GetTable());
+		oldSTCpy = currentSTCpy;
+
+	} while (oldSTCpy != currentSTCpy);
+
+	sm.GetTable() = oldSTCpy;
 }
 
 CStateMachineProcessor::~CStateMachineProcessor()

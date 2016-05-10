@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "CommandHandler.h"
 
-
 int main(int argc, char* argv[])
 {
 	if (argc != 4)

@@ -1,3 +1,4 @@
 translate-mil-to-mur StateMachineX
 translate-mur-to-mil StateMachineY
+determine UndeterminedX
 write-to-output-file

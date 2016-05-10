@@ -69,6 +69,149 @@
                     "to" : "q2"
                 }
             ]
+        },
+        {
+            "id" : "UndeterminedX",
+            "type" : "moore",
+            "states" : [
+                {
+                    "id" : "q1"
+                },
+                {
+                    "id" : "q2"
+                },
+                {
+                    "id" : "q3"
+                },
+                {
+                    "id" : "q4"
+                },
+                {
+                    "id" : "q5"
+                },
+                {
+                    "id" : "q6"
+                },
+                {
+                    "id" : "q7"
+                },
+                {
+                    "id" : "q8"
+                },
+                {
+                    "id" : "q9"
+                }
+            ],
+            "transitions" : [
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q1",
+                    "to" : "q2"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q2",
+                    "to" : "q4"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q3",
+                    "to" : "q2"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q4",
+                    "to" : "q4"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q5",
+                    "to" : "q7"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q6",
+                    "to" : "q4"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q7",
+                    "to" : "q9"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q8",
+                    "to" : "q9"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q9",
+                    "to" : "q9"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q1",
+                    "to" : "q3"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q2",
+                    "to" : "q3"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q3",
+                    "to" : "q5"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q4",
+                    "to" : "q6"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q5",
+                    "to" : "q5"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q6",
+                    "to" : "q8"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q7",
+                    "to" : "q5"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q8",
+                    "to" : "q8"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q9",
+                    "to" : "q8"
+                }
+            ]
         }
     ]
 }

@@ -11,6 +11,7 @@ public:
 	void WriteToFile();
 	void TransferToMeale(CStateMachine & sm);
 	void TransferToMoore(CStateMachine & sm);
+	void Determine(CStateMachine & sm);
 	CStateMachine & Get(std::string const& id);
 	~CStateMachineProcessor();
 private:

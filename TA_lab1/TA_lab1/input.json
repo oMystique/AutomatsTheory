@@ -51,5 +51,57 @@
             "from": "q2",
             "to": "q3"
         }]
+    },{
+        "id": "UndeterminedX",
+        "type": "moore",
+        "states": [{
+            "id": "q0",
+            "output": ""
+        }, {
+            "id": "q1",
+            "output": ""
+        }, {
+            "id": "q2",
+            "output": ""
+        }, {
+            "id": "q3",
+            "output": ""
+        }, {
+            "id": "q4",
+            "output": ""
+        }],
+        "transitions": [{
+            "input": "0",
+            "from": "q0",
+            "to": "q0;q1"
+        }, {
+            "input": "1",
+            "from": "q0",
+            "to": "q0;q3"
+        }, {
+            "input": "0",
+            "from": "q1",
+            "to": "q2"
+        }, {
+            "input": "0",
+            "from": "q2",
+            "to": "q2"
+        }, {
+            "input": "1",
+            "from": "q2",
+            "to": "q2"
+        }, {
+            "input": "1",
+            "from": "q3",
+            "to": "q4"
+        }, {
+            "input": "0",
+            "from": "q4",
+            "to": "q4"
+        }, {
+            "input": "1",
+            "from": "q4",
+            "to": "q4"
+        }]
     }]
 }

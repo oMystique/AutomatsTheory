@@ -69,6 +69,254 @@
                     "to" : "q2"
                 }
             ]
+        },
+        {
+            "id" : "UndeterminedX",
+            "type" : "moore",
+            "states" : [
+                {
+                    "id" : "q1"
+                },
+                {
+                    "id" : "q2"
+                },
+                {
+                    "id" : "q3"
+                },
+                {
+                    "id" : "q4"
+                },
+                {
+                    "id" : "q5"
+                },
+                {
+                    "id" : "q6"
+                },
+                {
+                    "id" : "q7"
+                },
+                {
+                    "id" : "q8"
+                },
+                {
+                    "id" : "q9"
+                }
+            ],
+            "transitions" : [
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q1",
+                    "to" : "q2"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q2",
+                    "to" : "q4"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q3",
+                    "to" : "q2"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q4",
+                    "to" : "q4"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q5",
+                    "to" : "q7"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q6",
+                    "to" : "q4"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q7",
+                    "to" : "q9"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q8",
+                    "to" : "q9"
+                },
+                {
+                    "input" : "0",
+                    "output" : "",
+                    "from" : "q9",
+                    "to" : "q9"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q1",
+                    "to" : "q3"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q2",
+                    "to" : "q3"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q3",
+                    "to" : "q5"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q4",
+                    "to" : "q6"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q5",
+                    "to" : "q5"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q6",
+                    "to" : "q8"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q7",
+                    "to" : "q5"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q8",
+                    "to" : "q8"
+                },
+                {
+                    "input" : "1",
+                    "output" : "",
+                    "from" : "q9",
+                    "to" : "q8"
+                }
+            ]
+        },
+        {
+            "id" : "StateMachineX",
+            "type" : "meale",
+            "states" : [
+                {
+                    "id" : "q0"
+                },
+                {
+                    "id" : "q1"
+                },
+                {
+                    "id" : "q2"
+                }
+            ],
+            "transitions" : [
+                {
+                    "input" : "x1",
+                    "output" : "y1",
+                    "from" : "q0",
+                    "to" : "q0"
+                },
+                {
+                    "input" : "x1",
+                    "output" : "y2",
+                    "from" : "q1",
+                    "to" : "q1"
+                },
+                {
+                    "input" : "x2",
+                    "output" : "y1",
+                    "from" : "q0",
+                    "to" : "q2"
+                }
+            ]
+        },
+        {
+            "id" : "StateMachineX",
+            "type" : "meale",
+            "states" : [
+                {
+                    "id" : "q0"
+                },
+                {
+                    "id" : "q1"
+                },
+                {
+                    "id" : "q2"
+                }
+            ],
+            "transitions" : [
+                {
+                    "input" : "x1",
+                    "output" : "y1",
+                    "from" : "q0",
+                    "to" : "1"
+                },
+                {
+                    "input" : "x1",
+                    "output" : "y2",
+                    "from" : "q1",
+                    "to" : "2"
+                },
+                {
+                    "input" : "x2",
+                    "output" : "y1",
+                    "from" : "q0",
+                    "to" : "3"
+                }
+            ]
+        },
+        {
+            "id" : "StateMachineY",
+            "type" : "meale",
+            "states" : [
+                {
+                    "id" : "q1"
+                },
+                {
+                    "id" : "q2"
+                },
+                {
+                    "id" : "q3"
+                }
+            ],
+            "transitions" : [
+                {
+                    "input" : "x1",
+                    "output" : "y1",
+                    "from" : "q1",
+                    "to" : "1"
+                },
+                {
+                    "input" : "x1",
+                    "output" : "y2",
+                    "from" : "q2",
+                    "to" : "3"
+                },
+                {
+                    "input" : "x2",
+                    "output" : "y3",
+                    "from" : "q1",
+                    "to" : "2"
+                }
+            ]
         }
     ]
 }

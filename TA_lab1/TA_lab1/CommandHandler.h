@@ -13,6 +13,7 @@ public:
 private:
 	void TransferToMeale(std::istream & strm);
 	void TransferToMoore(std::istream & strm);
+	void Determine(std::istream & strm);
 	void Minimize(std::istream & strm);
 	void WriteOutputToFile(std::istream & strm);
 	std::istream & m_input;

@@ -12,6 +12,7 @@ CCommandHandler::CCommandHandler(CStateMachineProcessor & sm, istream & input)
 		{ "minimize-mil", bind(&CCommandHandler::Minimize, this, _1) },
 		{ "minimize-mur", bind(&CCommandHandler::Minimize, this, _1) },
 		{ "write-to-output-file", bind(&CCommandHandler::WriteOutputToFile, this, _1) },
+		{ "determine", bind(&CCommandHandler::Determine, this, _1) },
 	})
 {
 
@@ -43,6 +44,13 @@ void CCommandHandler::TransferToMoore(istream & strm)
 	string id;
 	strm >> id;
 	m_smProcessor.TransferToMoore(m_smProcessor.Get(id));
+}
+
+void CCommandHandler::Determine(std::istream & strm)
+{
+	string id;
+	strm >> id;
+	m_smProcessor.Determine(m_smProcessor.Get(id));
 }
 
 void CCommandHandler::Minimize(std::istream & strm)

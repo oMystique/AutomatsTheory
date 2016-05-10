@@ -4,7 +4,34 @@
 using namespace json_spirit;
 using namespace std;
 
-CStateMachineProcessor::CStateMachineProcessor(string const& input, string const& output)
+bool operator ==(vector<pair<string, string>> const &v1, vector<pair<string, string>> const &v2)
+{
+	if (v1.size() != v2.size())
+	{
+		return false;
+	}
+
+	for (size_t i = 0; i != v1.size(); ++i)
+	{
+		if (v1[i].first != v2[i].first)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+vector<pair<string, string>> GetColumn(StateTable const &sm, size_t columnNumber)
+{
+	vector<pair<string, string>> v;
+	for (auto it = sm.begin() + 1; it != sm.end(); ++it)
+	{
+		v.push_back((*it)[columnNumber]);
+	}
+	return v;
+}
+
+CStateMachineProcessor::CStateMachineProcessor(std::string const& input, std::string const& output)
 	: m_isFirstTimeWrite(true)
 	, m_output(output)
 {
@@ -77,13 +104,13 @@ json_spirit::Array CStateMachineProcessor::GetTransitions(CStateMachine const& s
 	return transitions;
 }
 
-CStateMachine & CStateMachineProcessor::Get(string const& id)
+CStateMachine & CStateMachineProcessor::Get(std::string const& id)
 {
-	auto it = find_if(m_stateMachines.begin(), m_stateMachines.end(),
+	auto it = std::find_if(m_stateMachines.begin(), m_stateMachines.end(),
 		[id](CStateMachine const& sm) {return sm.GetId() == id; });
 	if (it == m_stateMachines.end())
 	{
-		throw invalid_argument("Cannot find state machine with this id");
+		throw std::invalid_argument("Cannot find state machine with this id");
 	}
 	return *it;
 }
@@ -93,7 +120,7 @@ void CStateMachineProcessor::TransferToMeale(CStateMachine & sm)
 {
 	if (sm.GetType() != "meale")
 	{
-		map<string, string> mooreStates;
+		std::map<string, string> mooreStates;
 		for (auto const & cell : sm.GetTable()[0])
 		{
 			mooreStates.insert({ cell.first, cell.second });
@@ -196,85 +223,75 @@ void CStateMachineProcessor::TransferToMoore(CStateMachine & sm)
 	m_jsonStateMachines.push_back(ToJson(sm));
 }
 
-void CStateMachineProcessor::Determine(CStateMachine & sm)
+StateTable CStateMachineProcessor::AllocateOfEquivalenceClass(StateTable resourceST, StateTable const & originalST)
 {
-	StateTable dTable;
-	dTable.push_back({ {"", ""}, {sm.GetTable()[0][1]} });
-	for (size_t i = 1; i < sm.GetTable().size(); i++)
+	int classNumber = 1;
+	map<string, int> classes;
+	while (resourceST[0].size() != 1)
 	{
-		dTable.push_back({ { sm.GetTable()[i][0] } });
-	}
-	auto startSize = dTable[0].size();
-	size_t addedStatesCount = 0;
-	for (size_t col = 1; col < startSize + addedStatesCount; col++)
-	{
-		for (size_t row = 1; row < dTable.size(); row++)
+		auto currentColumn = GetColumn(resourceST, 1);
+		classes.emplace(resourceST[0][1].first, classNumber);
+		for (auto i = 0; i != resourceST.size(); ++i)
 		{
-			//split state -from- and add to cell -to- each of result
-			//if -to- state is new then add it to dTable states and addedStatesCount++
-			vector<string> splittedState;
-			boost::split(splittedState, dTable[0][col].first, bind2nd(equal_to<char>(), ';'));
-			pair<string, string> cell;
-			for (auto & state : splittedState)
+			auto &vec = resourceST[i];
+			vec.erase(vec.begin() + 1);
+		}
+		for (size_t i = 1; i < resourceST[0].size(); ++i)
+		{
+			auto cmpColumn = GetColumn(resourceST, i);
+			if (cmpColumn == currentColumn)
 			{
-				auto it = find_if(sm.GetTable()[0].begin(), sm.GetTable()[0].end(),
-					[&](pair<string, string> const& pair) {return pair.first == state; });
-				auto pos = it - sm.GetTable()[0].begin();
-				if (sm.GetTable()[row][pos].first != ""
-					&& cell.first.find(sm.GetTable()[row][pos].first) == string::npos)
-				{
-					cell.first += sm.GetTable()[row][pos].first;
-					cell.first += ";";
-				}
+				classes.emplace(resourceST[0][i].first, classNumber);
 			}
-			dTable[row].push_back(cell);
-			auto & cellFirst = dTable[row][col].first;
-			cellFirst.erase(cellFirst.end() - 1, cellFirst.end());
-			vector<string> compareVec;
-			boost::split(compareVec, cellFirst, bind2nd(equal_to<char>(), ';'));
-			std::sort(compareVec.begin(), compareVec.end());
-			auto it = find_if(dTable[0].begin(), dTable[0].end(),
-				[&](pair<string, string> const& pair){
-				vector<string> compare2;
-				boost::split(compare2, pair.first, bind2nd(equal_to<char>(), ';'));
-				std::sort(compare2.begin(), compare2.end());
-				return compare2 == compareVec; 
-			});
-			if (it == dTable[0].end())
+		}
+		++classNumber;
+	}
+
+	auto outputST = originalST;
+	for (auto i = 1; i != outputST.size(); ++i)
+	{
+		for (auto j = 1; j != outputST[0].size(); ++j)
+		{
+			auto state = classes.find(originalST[i][j].first);
+			if (state != classes.end())
 			{
-				dTable[0].push_back({ cellFirst, "" });
-				addedStatesCount++;
+				outputST[i][j].first = to_string(state->second);
 			}
 		}
 	}
 
-	map<string, string> newStates;
-	auto stateName = "q";
-	for (size_t i = 1; i < dTable[0].size(); i++)
+	return outputST;
+}
+
+void CStateMachineProcessor::Minimize(CStateMachine & sm)
+{
+	if (sm.GetType() != "melee")
 	{
-		vector<string> state;
-		boost::split(state, dTable[0][i].first, bind2nd(equal_to<char>(), ';'));
-		sort(state.begin(), state.end());
-		string strState;
-		strState = accumulate(state.begin(), state.end(), strState);
-		newStates.emplace(strState, stateName + to_string(i));
+		TransferToMeale(sm);
 	}
 
-	for (size_t row = 0; row < dTable.size(); row++)
-	{
-		for (size_t col = 1; col < dTable[0].size(); col++)
-		{
+	//for swap Y and Q, for example
+	auto tempCopyST = sm.GetTable();
 
-			vector<string> state;
-			boost::split(state, dTable[row][col].first, bind2nd(equal_to<char>(), ';'));
-			sort(state.begin(), state.end());
-			string strState;
-			strState = accumulate(state.begin(), state.end(), strState);
-			dTable[row][col].first = newStates.at(strState);
+	for (unsigned i = 1; i <= tempCopyST.size() - 1; ++i)
+	{
+		for (unsigned j = 1; j != tempCopyST[0].size(); ++j)
+		{
+			swap(tempCopyST[i][j].first, tempCopyST[i][j].second);
 		}
 	}
-	sm.GetTable() = dTable;
-	m_jsonStateMachines.push_back(ToJson(sm));
+	//
+
+	StateTable oldSTCpy = AllocateOfEquivalenceClass(tempCopyST, sm.GetTable());
+	StateTable currentSTCpy;
+	do
+	{
+		currentSTCpy = AllocateOfEquivalenceClass(oldSTCpy, sm.GetTable());
+		oldSTCpy = currentSTCpy;
+
+	} while (oldSTCpy != currentSTCpy);
+
+	sm.GetTable() = oldSTCpy;
 }
 
 CStateMachineProcessor::~CStateMachineProcessor()

@@ -345,7 +345,8 @@ StateTable CStateMachineProcessor::AllocateOfEquivalenceClass(StateTable resourc
 
 void CStateMachineProcessor::Minimize(CStateMachine & sm)
 {
-	if (sm.GetType() != "melee")
+	auto type = sm.GetType();
+	if (type != "melee")
 	{
 		TransferToMeale(sm);
 	}
@@ -372,7 +373,14 @@ void CStateMachineProcessor::Minimize(CStateMachine & sm)
 	} while (oldSTCpy != currentSTCpy);
 
 	sm.GetTable() = oldSTCpy;
+
+	if (type != "melee")
+	{
+		TransferToMoore(sm);
+	}
+
 	m_jsonStateMachines.push_back(ToJson(sm));
+
 }
 
 CStateMachineProcessor::~CStateMachineProcessor()
